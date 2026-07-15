@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans Georgian", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Noto Serif Georgian", ui-serif, Georgia, serif;
+
+  --color-parchment-100: #FDFCF8;
+  --color-parchment-200: #F5F2EB;
+  --color-parchment-300: #EBE6D9;
+  
+  --color-stone-400: #B8B3A8;
+  --color-stone-500: #8F8B82;
+  --color-stone-600: #6B6860;
+  
+  --color-charcoal-800: #2C2C2A;
+  --color-charcoal-900: #1A1A19;
+  
+  --color-turquoise-700: #4B6E6A;
+  --color-turquoise-800: #36504D;
+
+  --animate-slow-pan: slowPan 40s ease-in-out infinite alternate;
+  
+  @keyframes slowPan {
+    0% { transform: scale(1.05) translate(0, 0); }
+    100% { transform: scale(1.1) translate(-2%, -2%); }
+  }
+}
+
+body {
+  background-color: var(--color-charcoal-900);
+  color: var(--color-parchment-100);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-stone-600);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-stone-500);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body, main, section, div, h1, h2, h3, h4, p, span {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  header {
+    display: none !important;
+  }
+  
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+  }
+  
+  p, h2, h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  .print-timeline {
+    display: block !important;
+    overflow: visible !important;
+  }
+  
+  .print-timeline-card {
+    display: block !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+    border: none !important;
+    border-top: 1px solid #ccc !important;
+    margin-bottom: 1.5rem !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .print-timeline-period {
+    color: #555 !important;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .print-gallery {
+    display: block !important;
+  }
+  
+  .print-gallery figure {
+    page-break-inside: avoid;
+    margin-bottom: 2rem !important;
+    width: 100% !important;
+  }
+  
+  .print-gallery img {
+    border: 1px solid #ccc !important;
+  }
+}
+
+.light-theme {
+  --color-charcoal-900: #FDFCF8;
+  --color-charcoal-800: #EBE6D9;
+
+  --color-parchment-100: #111110;
+  --color-parchment-200: #2C2C2A;
+  --color-parchment-300: #36504D;
+
+  /* Stone shades inverted: much darker for legibility on light bg */
+  --color-stone-400: #2C2925;
+  --color-stone-500: #46423C;
+  --color-stone-600: #6B6860;
+
+  --color-turquoise-700: #2A5250;
+  --color-turquoise-800: #1F3E3B;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Kvetera Heritage",
+  "description": "A museum-quality digital exhibition and field guide for the medieval fortress-city of Kvetera in Georgia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
