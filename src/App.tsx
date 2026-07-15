@@ -172,20 +172,20 @@ export default function App() {
     <div className="min-h-screen bg-charcoal-900 text-parchment-100 font-sans selection:bg-turquoise-700 selection:text-parchment-100">
       
       {/* Navigation Layer */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? 'bg-charcoal-900/90 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center relative">
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? 'bg-charcoal-900/90 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'}`}>
+        <div className="max-w-7xl mx-auto px-4 md:px-12 flex justify-between items-center relative">
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: scrolled ? 1 : 0 }}
-            className="font-serif tracking-widest uppercase text-sm md:text-base text-parchment-100"
+            className="font-serif tracking-widest uppercase text-sm text-parchment-100 truncate max-w-[120px] sm:max-w-none"
           >
             {data.title}
           </motion.div>
           
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
             <button 
               onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-              className="flex items-center justify-center p-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
               title="Toggle Theme"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-parchment-100" /> : <Moon className="w-4 h-4 text-parchment-100" />}
@@ -195,16 +195,16 @@ export default function App() {
                 window.focus();
                 setTimeout(() => window.print(), 100);
               }}
-              className="flex items-center justify-center p-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
               title={data.printLabel}
             >
               <Printer className="w-4 h-4 text-parchment-100" />
             </button>
             <button 
               onClick={toggleLanguage}
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors text-xs tracking-widest uppercase backdrop-blur-sm no-print"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors text-[10px] sm:text-xs tracking-widest uppercase backdrop-blur-sm no-print"
             >
-              <Globe className="w-4 h-4 text-parchment-100" />
+              <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-parchment-100" />
               <span>{lang === 'en' ? 'ქართული' : 'English'}</span>
             </button>
           </div>
@@ -327,12 +327,12 @@ export default function App() {
               <div className="absolute inset-0 bg-gradient-to-b from-charcoal-900/30 via-charcoal-900/40 to-charcoal-900"></div>
             </div>
             
-            <div className="relative z-10 text-center px-6 mt-16 max-w-4xl mx-auto">
+            <div className="relative z-10 text-center px-4 mt-16 max-w-4xl mx-auto w-full">
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 1 }}
-                className="mb-4 text-turquoise-700 tracking-[0.3em] text-xs md:text-sm uppercase font-semibold"
+                className="mb-4 text-turquoise-700 tracking-[0.2em] sm:tracking-[0.3em] text-[10px] sm:text-xs md:text-sm uppercase font-semibold"
               >
                 {data.location}
               </motion.div>
@@ -340,7 +340,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 1.2 }}
-                className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight text-parchment-100 drop-shadow-lg"
+                className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight text-parchment-100 drop-shadow-lg"
               >
                 {data.title}
               </motion.h1>
@@ -348,28 +348,28 @@ export default function App() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 1 }}
-                className="h-px w-24 bg-stone-500 mx-auto mb-6"
+                className="h-px w-16 sm:w-24 bg-stone-500 mx-auto mb-6"
               />
               <motion.h2 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 1 }}
-                className="font-serif italic text-xl md:text-3xl text-stone-400"
+                className="font-serif italic text-lg sm:text-xl md:text-3xl text-stone-400"
               >
                 {data.subtitle}
               </motion.h2>
             </div>
 
-            {/* Mobile Actions / Visitor Layer */}
+            {/* Hero CTA Buttons */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5, duration: 1 }}
-              className="absolute bottom-12 w-full px-6 flex flex-col sm:flex-row items-center justify-center gap-4 z-20"
+              className="absolute bottom-8 sm:bottom-12 w-full px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-3 z-20"
             >
               <button 
                 onClick={scrollToSummary}
-                className="flex items-center justify-between w-full sm:w-auto min-w-[200px] px-6 py-4 bg-parchment-200 text-charcoal-900 rounded-sm font-medium tracking-wide uppercase text-xs hover:bg-white transition-colors"
+                className="flex items-center justify-between w-full sm:w-auto px-5 py-3 sm:px-6 sm:py-4 bg-parchment-200 text-charcoal-900 rounded-sm font-medium tracking-wide uppercase text-xs hover:bg-white transition-colors"
               >
                 <span className="flex items-center gap-2"><BookOpen className="w-4 h-4" /> {data.readHistoryLabel}</span>
                 <ChevronDown className="w-4 h-4 ml-4" />
@@ -377,14 +377,14 @@ export default function App() {
               <div className="relative flex flex-col items-center w-full sm:w-auto">
                 <button 
                   onClick={toggleAudio}
-                  className={`flex items-center justify-between w-full sm:w-auto min-w-[200px] px-6 py-4 border border-stone-500/50 backdrop-blur-sm rounded-sm font-medium tracking-wide uppercase text-xs transition-colors ${isPlayingAudio ? 'bg-turquoise-800/50 text-parchment-100' : 'bg-charcoal-900/50 text-parchment-100 hover:bg-charcoal-800'}`}
+                  className={`flex items-center w-full sm:w-auto px-5 py-3 sm:px-6 sm:py-4 border border-stone-500/50 backdrop-blur-sm rounded-sm font-medium tracking-wide uppercase text-xs transition-colors ${isPlayingAudio ? 'bg-turquoise-800/50 text-parchment-100' : 'bg-charcoal-900/50 text-parchment-100 hover:bg-charcoal-800'}`}
                 >
                   <span className="flex items-center gap-2">
                     {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />} 
                     {isPlayingAudio ? data.listenActiveLabel : data.listenLabel}
                   </span>
                 </button>
-                <span className="mt-1.5 text-[10px] tracking-wider text-stone-500/70 uppercase font-mono">
+                <span className="mt-1 text-[9px] tracking-wider text-stone-500/60 uppercase font-mono">
                   {lang === 'en' ? 'English only' : 'მხოლოდ ინგლისურად'}
                 </span>
               </div>
@@ -392,7 +392,7 @@ export default function App() {
                 href="https://share.google/ZsoEaD0G9amMauVA0"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between w-full sm:w-auto min-w-[200px] px-6 py-4 border border-stone-500/50 backdrop-blur-sm rounded-sm font-medium tracking-wide uppercase text-xs transition-colors bg-charcoal-900/50 text-parchment-100 hover:bg-charcoal-800"
+                className="flex items-center w-full sm:w-auto px-5 py-3 sm:px-6 sm:py-4 border border-stone-500/50 backdrop-blur-sm rounded-sm font-medium tracking-wide uppercase text-xs transition-colors bg-charcoal-900/50 text-parchment-100 hover:bg-charcoal-800"
               >
                 <span className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
@@ -410,8 +410,8 @@ export default function App() {
                 <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-stone-600 font-semibold">{data.summaryTitle}</h3>
               </div>
               
-              <p className="font-serif text-2xl md:text-4xl leading-relaxed md:leading-relaxed text-charcoal-800">
-                <span className="text-turquoise-800 text-4xl md:text-6xl float-left mr-3 mt-1 leading-none font-medium">{data.summary.charAt(0)}</span>
+              <p className="font-serif text-xl sm:text-2xl md:text-4xl leading-relaxed text-charcoal-800">
+                <span className="text-turquoise-800 text-3xl sm:text-4xl md:text-6xl float-left mr-2 sm:mr-3 mt-1 leading-none font-medium">{data.summary.charAt(0)}</span>
                 {data.summary.slice(1)}
               </p>
             </div>
@@ -427,15 +427,15 @@ export default function App() {
           <main ref={mainRef} className="py-24 bg-charcoal-900 relative">
             <div className="max-w-3xl mx-auto px-6 md:px-12">
               {data.sections.map((section, index) => (
-                <div key={section.id} data-section-id={section.id} className="mb-24 md:mb-40 relative">
+                <div key={section.id} data-section-id={section.id} className="mb-16 sm:mb-24 md:mb-40 relative">
                   
                   {/* Archival Label */}
-                  <div className="sticky top-24 z-10 mb-8 flex items-center gap-4 py-2 bg-charcoal-900/90 backdrop-blur-md md:static md:bg-transparent">
+                  <div className="sticky top-16 sm:top-20 z-10 mb-6 sm:mb-8 flex items-center gap-3 py-2 bg-charcoal-900/95 backdrop-blur-md md:static md:bg-transparent">
                     <span className="text-turquoise-700 font-mono text-xs opacity-70">0{index + 1}</span>
-                    <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-stone-400 font-semibold">{section.title}</h3>
+                    <h3 className="font-sans text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase text-stone-400 font-semibold truncate">{section.title}</h3>
                   </div>
 
-                  <h4 className="font-serif text-3xl md:text-5xl mb-12 text-parchment-100 leading-tight">
+                  <h4 className="font-serif text-2xl sm:text-3xl md:text-5xl mb-8 sm:mb-12 text-parchment-100 leading-tight">
                     {section.title}
                   </h4>
                   
@@ -449,11 +449,11 @@ export default function App() {
 
                   {/* Interspersed imagery for specific sections */}
                   {index === 1 && (
-                    <figure className="my-16 -mx-6 md:-mx-24 relative">
+                    <figure className="my-10 sm:my-16 -mx-6 sm:-mx-12 md:-mx-24 relative">
                       <div className="aspect-[16/9] w-full overflow-hidden rounded-sm border border-stone-800">
                         <img src={IMAGES.landscape} alt="Landscape around Kvetera" className="w-full h-full object-cover" />
                       </div>
-                      <figcaption className="mt-4 text-xs font-sans text-stone-500 uppercase tracking-widest text-center">
+                      <figcaption className="mt-3 text-[10px] sm:text-xs font-sans text-stone-500 uppercase tracking-widest text-center">
                         {lang === 'en' ? 'The surrounding highlands of Kakheti' : 'კახეთის მაღალმთიანეთი'}
                       </figcaption>
                     </figure>
@@ -562,10 +562,10 @@ export default function App() {
                 exit={{ opacity: 0 }}
                 className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/95 backdrop-blur-xl p-4 md:p-12"
               >
-                <div className="relative w-full max-w-5xl h-full max-h-[85vh] flex flex-col">
+                <div className="relative w-full max-w-5xl flex flex-col" style={{height: 'min(85vh, 100%)'}}>
                   <button 
                     onClick={() => { setSelectedImage(null); setShowMagnifier(false); }}
-                    className="absolute -top-12 right-0 text-stone-400 hover:text-parchment-100 transition-colors uppercase tracking-widest text-xs font-medium flex items-center gap-2"
+                    className="mb-3 self-end text-stone-400 hover:text-parchment-100 transition-colors uppercase tracking-widest text-xs font-medium flex items-center gap-2"
                   >
                     {data.closeModalLabel}
                   </button>
