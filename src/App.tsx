@@ -169,7 +169,7 @@ export default function App() {
   const quickFacts = activeSection?.quickFacts || [];
 
   return (
-    <div className="min-h-screen bg-charcoal-900 text-parchment-100 font-sans selection:bg-turquoise-700 selection:text-parchment-100">
+    <div className="min-h-screen w-full overflow-x-hidden bg-charcoal-900 text-parchment-100 font-sans selection:bg-turquoise-700 selection:text-parchment-100">
       
       {/* Navigation Layer */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? 'bg-charcoal-900/90 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'}`}>

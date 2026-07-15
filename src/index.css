@@ -26,6 +26,11 @@
   }
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background-color: var(--color-charcoal-900);
   color: var(--color-parchment-100);
