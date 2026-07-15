@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
-import { Globe, ChevronDown, BookOpen, Volume2, VolumeX, Printer, Info, MapPin, ArrowUp, Sun, Moon } from 'lucide-react';
+import { Globe, ChevronDown, BookOpen, Volume2, VolumeX, Printer, Info, MapPin, ArrowUp, Sun, Moon, Menu, X } from 'lucide-react';
 import { contentData, Language, Content } from './content';
 import heroImg from './assets/hero.jpeg';
 import churchImg from './assets/church.jpeg';
@@ -19,11 +19,77 @@ const IMAGES: Record<string, string> = {
   gallery4: heroImg
 };
 
+const GlossaryTerm = ({ term, definition, originalKey }: { term: string; definition: string; originalKey: string }) => {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const ref = useRef<HTMLSpanElement>(null);
+  const TOOLTIP_W = 240;
+  const PADDING = 8;
+
+  const handleOpen = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      // Position above the word (using viewport-relative coordinates for position:fixed)
+      const top = rect.top - PADDING;
+      // Center on the word, clamped to viewport
+      let left = rect.left + rect.width / 2 - TOOLTIP_W / 2;
+      left = Math.max(PADDING, Math.min(left, window.innerWidth - TOOLTIP_W - PADDING));
+      setPos({ top, left });
+    }
+    setOpen(o => !o);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('touchstart', close);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('touchstart', close);
+    };
+  }, [open]);
+
+  return (
+    <span
+      ref={ref}
+      onClick={handleOpen}
+      className="relative inline-block cursor-pointer text-turquoise-400 border-b border-turquoise-400/30 hover:border-turquoise-400 transition-colors"
+    >
+      {term}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18 }}
+            style={{
+              position: 'fixed',
+              top: pos.top,
+              left: pos.left,
+              width: TOOLTIP_W,
+              transform: 'translateY(-100%)',
+            }}
+            className="z-[9999] p-3 bg-charcoal-800 border border-stone-700 rounded-sm shadow-xl text-xs text-parchment-100 text-left font-sans pointer-events-none"
+          >
+            <strong className="block text-turquoise-500 mb-1 font-mono uppercase tracking-wider">{originalKey}</strong>
+            {definition}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+};
+
+
 const HighlightText = ({ text, glossary }: { text: string, glossary: Record<string, string> }) => {
   const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
   if (terms.length === 0) return <>{text}</>;
 
-  // Escape terms for regex and build a case-insensitive regex
   const escapedTerms = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const regex = new RegExp(`(${escapedTerms.join('|')})`, 'gi');
   const parts = text.split(regex);
@@ -37,15 +103,7 @@ const HighlightText = ({ text, glossary }: { text: string, glossary: Record<stri
       {parts.map((part, i) => {
         const match = lowerGlossary[part.toLowerCase()];
         if (match) {
-          return (
-            <span key={i} className="relative inline-block group cursor-help text-turquoise-400 border-b border-turquoise-400/30 hover:border-turquoise-400 transition-colors">
-              {part}
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-charcoal-800 border border-stone-700 rounded-sm shadow-xl text-xs text-parchment-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none text-left font-sans">
-                <strong className="block text-turquoise-500 mb-1 font-mono uppercase tracking-wider">{match.originalKey}</strong>
-                {match.value}
-              </span>
-            </span>
-          );
+          return <GlossaryTerm key={i} term={part} definition={match.value} originalKey={match.originalKey} />;
         }
         return <span key={i}>{part}</span>;
       })}
@@ -63,6 +121,7 @@ export default function App() {
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string>('origins');
   const [weather, setWeather] = useState<{ temp: number, condition: string } | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   
   const data: Content = contentData[lang];
   const mainRef = useRef<HTMLElement>(null);
@@ -182,10 +241,11 @@ export default function App() {
             {data.title}
           </motion.div>
           
-          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+          {/* Desktop controls — hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-2 sm:gap-3 ml-auto">
             <button 
               onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
               title="Toggle Theme"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-parchment-100" /> : <Moon className="w-4 h-4 text-parchment-100" />}
@@ -195,17 +255,40 @@ export default function App() {
                 window.focus();
                 setTimeout(() => window.print(), 100);
               }}
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors backdrop-blur-sm no-print"
               title={data.printLabel}
             >
               <Printer className="w-4 h-4 text-parchment-100" />
             </button>
             <button 
               onClick={toggleLanguage}
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors text-[10px] sm:text-xs tracking-widest uppercase backdrop-blur-sm no-print"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-stone-500/30 bg-charcoal-800/50 hover:bg-turquoise-800/60 transition-colors text-xs tracking-widest uppercase backdrop-blur-sm no-print"
             >
-              <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-parchment-100" />
+              <Globe className="w-4 h-4 text-parchment-100" />
               <span>{lang === 'en' ? 'ქართული' : 'English'}</span>
+            </button>
+          </div>
+
+          {/* Mobile controls: lang + theme + burger */}
+          <div className="sm:hidden flex items-center gap-2 ml-auto">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 backdrop-blur-sm text-[10px] font-sans text-parchment-100 tracking-wide no-print"
+            >
+              {lang === 'en' ? 'KA' : 'EN'}
+            </button>
+            <button
+              onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 backdrop-blur-sm no-print"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-parchment-100" /> : <Moon className="w-4 h-4 text-parchment-100" />}
+            </button>
+            <button
+              onClick={() => setMenuOpen(o => !o)}
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-500/30 bg-charcoal-800/50 backdrop-blur-sm no-print"
+              aria-label="Open menu"
+            >
+              {menuOpen ? <X className="w-4 h-4 text-parchment-100" /> : <Menu className="w-4 h-4 text-parchment-100" />}
             </button>
           </div>
         </div>
@@ -216,6 +299,89 @@ export default function App() {
           style={{ scaleX }}
         />
       </nav>
+
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 sm:hidden bg-charcoal-900/98 backdrop-blur-xl flex flex-col px-8 pt-24 pb-12 no-print"
+          >
+            {/* Section links */}
+            <div className="flex flex-col gap-1 border-b border-stone-800 pb-8 mb-8">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-stone-500 font-mono mb-4">Navigation</p>
+              {data.sections.map(section => (
+                <button
+                  key={section.id}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => {
+                      const el = document.querySelector(`[data-section-id="${section.id}"]`);
+                      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                    }, 300);
+                  }}
+                  className="text-left font-serif text-2xl text-parchment-100 py-3 border-b border-stone-800/50 hover:text-turquoise-700 transition-colors"
+                >
+                  {section.title}
+                </button>
+              ))}
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById('timeline');
+                    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                  }, 300);
+                }}
+                className="text-left font-serif text-2xl text-parchment-100 py-3 border-b border-stone-800/50 hover:text-turquoise-700 transition-colors"
+              >
+                {data.timelineTitle}
+              </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById('gallery');
+                    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                  }, 300);
+                }}
+                className="text-left font-serif text-2xl text-parchment-100 py-3 hover:text-turquoise-700 transition-colors"
+              >
+                {data.galleryTitle}
+              </button>
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-col gap-3">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-stone-500 font-mono mb-2">Settings</p>
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-3 px-5 py-3 rounded-sm border border-stone-700/50 bg-charcoal-800/50 text-parchment-100 text-sm tracking-widest uppercase"
+              >
+                <Globe className="w-4 h-4" />
+                {lang === 'en' ? 'Switch to ქართული' : 'Switch to English'}
+              </button>
+              <button
+                onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+                className="flex items-center gap-3 px-5 py-3 rounded-sm border border-stone-700/50 bg-charcoal-800/50 text-parchment-100 text-sm tracking-widest uppercase"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); window.focus(); setTimeout(() => window.print(), 100); }}
+                className="flex items-center gap-3 px-5 py-3 rounded-sm border border-stone-700/50 bg-charcoal-800/50 text-parchment-100 text-sm tracking-widest uppercase"
+              >
+                <Printer className="w-4 h-4" />
+                {data.printLabel}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Table of Contents Floating Panel */}
       <motion.div 
